@@ -1,11 +1,11 @@
-# Social Scientist Demo — Robust Feedback Layer
+# Social Scientist Demo Feedback Layer
 
 - This repository contains a self-contained demonstration of a qualitative feedback mechanism used to stabilize response-mode selection in AI systems.
-- This folder includes a minimal, runnable demo of a qualitative feedback layer for mode selection. It’s designed to be recruiter-friendly: simple to run, with clear output.
+- This folder includes a minimal, runnable demo of a qualitative feedback layer for mode selection. It’s designed to be simple to run, with clear output.
 
 ## Files
 - `SocialScientistFeedback.py`: Standalone demo of the feedback layer.
-- `SocialScientistdemo.py`: Long-form narrative file; a compact demo block is appended at the end but the file contains non-code text at the top, so use the standalone demo for running.
+- `SocialScientistdemo.py`: Long-form narrative file; a compact demo block is appended at the end. The file contains non-code text at the top, so use the standalone demo for running.
 
 ## What It Does
 - Maintains an association matrix β between invariants (tokens) and response modes.
