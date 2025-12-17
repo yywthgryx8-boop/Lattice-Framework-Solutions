@@ -32,7 +32,7 @@ Edit `SocialScientistFeedback.py` to change:
 - `session_tokens = ["overload", "bf_play", "engineering"]`
 - Seed β values (search for `demo.beta[...]`).
 
-To add stronger defaults, set more initial β entries or adjust `learning_rate`, `clamp_min`, `clamp_max`.
+For stronger defaults, more initial β entries can be set or adjustments can be made to: `learning_rate`, `clamp_min`, `clamp_max`.
 
 ## Notes
 - `SocialScientistdemo.py` contains a large narrative transcript. Its appended demo block can be invoked with `--demo` once the top content is wrapped or relocated; for now, prefer the standalone file.
