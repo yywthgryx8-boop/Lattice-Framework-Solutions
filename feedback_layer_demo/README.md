@@ -1,13 +1,14 @@
-# Entrainment Feedback Loop — Robust Demo
+# Entrainment Feedback Loop Demo
 
-This demo illustrates a simple, robust feedback layer for mode selection based on qualitative invariants. It’s built to be readable and recruiter-friendly.
+This demo illustrates a simple and stable feedback layer for mode selection based on qualitative invariants. It is specifically built to be recruiter- and manager-readable.
 
-## Purpose
-- Show how an invariant→mode scoring layer can select a response style.
-- Update learned associations (β) from qualitative reward.
-- Clamp β within bounds to prevent runaway weights. β (association weight): the learned strength between a token and a mode.
-- Provide optional verbose warnings for misconfigured or unknown invariants.
-- This pattern generalizes to systems that need predictable response styles, safety-aware routing, or human-AI collaboration workflows.
+Purpose
+
+Show how an invariant→mode scoring layer can use reward/punishment to elicit a response style.
+Update learned associations (β) from qualitative reward.
+Clamp β within bounds to prevent runaway weights. β (association weight) is the learned strength between an invariant (token) and a mode.
+Provide optional, detailed warnings for misconfigured or unknown invariants.
+This pattern generalizes to systems that need predictable response styles, safety-aware routing, or human–AI collaboration workflows.
 
 ## Key Features
 - Mode scoring: `score_modes(active_tokens, weights)` computes per-mode scores.
