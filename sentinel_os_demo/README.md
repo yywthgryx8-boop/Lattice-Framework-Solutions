@@ -1,10 +1,10 @@
 # SentinelOS Demo — Guard & Archetype Tuner
 
-This demo shows two key pieces: a simple content guard detector and a robust feedback layer for tuning guard modes per archetype.
+This demo shows two key pieces: a simple content guard detector and a contraint-based feedback layer for tuning guard modes per archetype-defined user interfaces.
 
 
 ## Why This Matters
-- This pattern mirrors how adaptive systems bias behavior without retraining models.
+- This pattern mirrors how adaptive systems are able to bias behavior without retraining models.
 - 
 ## Features
 
