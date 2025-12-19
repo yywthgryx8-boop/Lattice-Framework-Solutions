@@ -5,7 +5,7 @@ This demo shows two key pieces: a simple content guard detector and a contraint-
 
 ## Why This Matters
 - This pattern mirrors how adaptive systems are able to bias behavior without retraining models.
-- 
+
 ## Features
 
 ### Part 1: Guard Detector
