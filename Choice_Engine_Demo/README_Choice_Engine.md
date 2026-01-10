@@ -2,22 +2,22 @@
 
 **Author:** Bradley Stephens  
 **Purpose:** Portfolio demonstration of AI orchestration architecture  
-**Category:** AI Systems Design, Executive Function, Safety Engineering
+**Category:** AI Systems Design, Executive Function, Deterministic Routing
 
 ---
 
 ## Overview
 
-This demo shows AI behavior is routed through the use of a constraint-based architecture that is able to route AI behavior based on context and safety requirements.
+This is a deterministic executive function selector for AI systems, an auditable orchestration that routes behavior based on context, confidence (systems' certainty about user intent classification), and safety rules.
 
-**Core Concept:** Instead of letting AI systems dynamically "choose" behavior in unpredictable ways, this architecture provides a transparent, staged pipeline that makes explicit decisions with clear rationale and safety gates.
+**Core idea:** AI systems without explicit behavior orchestration are hard to debug because of the systems' unpredictable behavior. This architecture uses a transparent, staged pipeline that makes explicit decisions with clear rationale and safety gates.
 
 ---
 
 ## What This Demo Shows
 
 ### 1. **Staged Decision Pipeline**
-Five-stage architecture that separates concerns and enables debugging:
+Five-stage architecture that separates concerns:
 - **ASSESS**: Intent classification with confidence modeling
 - **GATE**: Safety controls and override hierarchy  
 - **DECIDE**: Mode selection with multi-mode arbitration
@@ -26,48 +26,46 @@ Five-stage architecture that separates concerns and enables debugging:
 
 ### 2. **Safety-First Design**
 - **Override hierarchy** (Policy > Safety > Engine > Modes > Style)
-- **Confidence-based gating** (low confidence triggers clarification, not guessing)
-- **Hard halt capabilities** for policy violations
-- **"Clarify-once" pattern** that fails safely by asking one question instead of proceeding with uncertainty
+- **Confidence-based gating** — low confidence triggers clarification, not guessing
+- **Hard halt** for policy violations
+- **"Clarify-once" pattern** — fails safely by asking one question instead of proceeding with low confidence
 
 ### 3. **Constraint-Based Orchestration**
 Multi-mode arbitration with explicit constraints:
-- Maximum 2 primary modes (prevents competing voices)
-- Required observational anchor (ensures grounded outputs)
-- Dual emotional dominance prevention (maintains stability)
+- Max 2 primary modes (prevents competing voices)
+- Required observational anchor (Analyst or Witness — keeps outputs grounded)
+- Prevents conflicting emotional modes at low confidence
 - Capability tags separate behavior from identity
 
 ### 4. **Auditability & Transparency**
-Every decision generates a cryptographically-hashed receipt showing:
-- Selected modes and rationale
-- Confidence scores and gate results
-- Capability tags applied
+Every decision generates a cryptographically-hashed receipt with:
+- Selected modes + rationale
+- Confidence scores + gate results
+- Capability tags
 - Exit conditions
-- Full decision pipeline state
+- Full pipeline state
 
 ---
 
 ## Key Technical Concepts
 
 ### Capability Tags vs. Mode Identity
-Instead of treating modes as personalities that "compete," this system uses **capability tags** as compilable constraints. A mode is just a bundle of behavioral capabilities (empathy_high, directive_low, analytic_lens, etc.). This makes behavior predictable and testable.
+Modes aren't personalities that compete for control — they're just bundles of capability tags. Tags like `empathy_high`, `directive_low`, `analytic_lens` are compilable constraints. The mode label (SelfReflection, Analyst, etc.) is just shorthand for which tags get loaded. Makes behavior way more predictable and testable.
 
 ### Confidence Modeling
-Simple but effective heuristic:
+Simple heuristic:
 ```
 confidence = 0.35 + (0.12 × explicit_signals) + (0.35 × stream_strength) - penalty
 ```
-- Increases with strong, consistent input signals
-- Decreases with contradictions or contention
-- Triggers safety gates when < 0.4
+Increases with strong signals, decreases with contradictions/contention. Triggers safety gates when < 0.4.
 
 ### Override Hierarchy
-Clear authority chain prevents ambiguity:
-1. **PolicyConflict** → Hard halt (highest authority)
-2. **SafetyGate** → Clarify-once (uncertainty handling)
+Clear authority chain:
+1. **PolicyConflict** → Hard halt (highest)
+2. **SafetyGate** → Clarify-once
 3. **ChoiceEngine** → Normal routing
 4. **SelectedModes** → Mode-level constraints
-5. **StyleLayer** → Presentation only (lowest authority)
+5. **StyleLayer** → Presentation only (lowest)
 
 ---
 
@@ -99,12 +97,12 @@ python ChoiceEngineDemo.py --validate
 - `--seed`: Add demo seed ID to receipts for audit trails
 
 ### Demo Cases Included
-1. **Emotional distress + logic loop** → Tests dual-signal handling
-2. **Mode contention** → Tests arbitration (Sentinel + Conversation only)
-3. **Sleep deprivation** → Tests abstraction control
-4. **Strategic defense** → Tests multi-mode coordination
-5. **Creative brainstorm** → Tests creative lens activation
-6. **Explicit activation** → Tests command recognition
+1. **Emotional distress + logic loop** → dual-signal handling
+2. **Mode contention** → arbitration (Sentinel + Conversation only)
+3. **Sleep deprivation** → abstraction control
+4. **Strategic defense** → multi-mode coordination
+5. **Creative brainstorm** → creative lens
+6. **Explicit activation** → command recognition
 
 ### Example Output
 ```json
@@ -112,8 +110,8 @@ python ChoiceEngineDemo.py --validate
   "engine_state": "ACTIVE",
   "stage": "EXIT",
   "intent": "emotional_support",
-  "tone": "Compassionate support",
-  "selected_modes": ["Therapist", "Witness"],
+  "tone": "Reflective and supportive",
+  "selected_modes": ["SelfReflection", "Witness"],
   "capability_tags": ["empathy_high", "directive_low", "quiet_output", "mirror_suppressed"],
   "confidence": 0.7100,
   "gate": {
@@ -125,7 +123,7 @@ python ChoiceEngineDemo.py --validate
     "Exit when: one mode acknowledged by caller",
     "Exit when: no contradictions for 2 turns"
   ],
-  "rationale": "Emotional support: Therapist + Witness. | assess(signals=2, stream_strength=0.80) | gate(No gate blocks.)",
+  "rationale": "Emotional support: SelfReflection + Witness. | assess(signals=2, stream_strength=0.80) | gate(No gate blocks.)",
   "sha256_12": "a3f7d9e8c2b1"
 }
 ```
@@ -136,40 +134,40 @@ python ChoiceEngineDemo.py --validate
 
 ### Why This Matters for AI Ed Tech
 
-1. **Teachability**: Clear pipeline stages make the decision process transparent for learners
-2. **Safety**: Explicit gates prevent systems from "winging it" with low confidence
-3. **Debuggability**: Auditable receipts enable post-hoc analysis of decisions
-4. **Scalability**: Capability tags separate behavior from implementation
+1. **Teachability** — clear pipeline stages make decisions transparent
+2. **Safety** — explicit gates prevent systems from winging it with low confidence
+3. **Debuggability** — auditable receipts for post-hoc analysis
+4. **Scalability** — capability tags separate behavior from implementation
 
 ### Design Philosophy
 
-- **Fail safely, not smoothly**: Low confidence → clarify, don't guess
-- **Explicit over implicit**: All constraints and overrides are named and ordered
-- **Conservative routing**: Prefer minimal mode sets over complex orchestrations
-- **Auditable by design**: Every decision has a hash-verifiable receipt
+- **Fail safely, not smoothly** — low confidence → clarify, don't guess
+- **Explicit over implicit** — all constraints/overrides are named and ordered
+- **Conservative routing** — prefer minimal mode sets
+- **Auditable by design** — every decision has a hash-verifiable receipt
 
 ---
 
 ## Educational Context
 
-This demo is designed to showcase:
+Designed to demonstrate:
 
 ### For AI/ML Roles
-- System architecture design (staged pipelines)
-- Safety engineering (gates, halts, confidence modeling)
-- Deterministic orchestration patterns
-- Test-driven validation (--validate smoke tests)
+- System architecture (staged pipelines)
+- Safety engineering (gates, confidence modeling)
+- Deterministic orchestration
+- Test-driven validation
 
 ### For Tech Ed Roles
 - Clear conceptual separation (assess vs. gate vs. decide)
 - Teachable abstractions (capability tags, override hierarchy)
-- Debugging-friendly design (receipts, rationale tracking)
-- Live demonstration support (--verbose pipeline visibility)
+- Debugging-friendly (receipts, rationale tracking)
+- Live demo support (--verbose)
 
 ### For Product Roles
-- User safety prioritization (clarify-once pattern)
-- Transparent decision-making (full pipeline state)
-- Constraint-based predictability (no emergent chaos)
+- User safety prioritization (clarify-once)
+- Transparent decisions
+- Constraint-based predictability
 
 ---
 
@@ -194,27 +192,27 @@ This demo is designed to showcase:
 
 ## What This Doesn't Show
 
-To keep the demo focused, this excludes:
-- Multi-turn state tracking (handled by external session manager)
+To keep the demo focused:
+- Multi-turn state tracking (external session manager handles this)
 - Stream computation (assumes upstream analysis provides InputStreams)
-- Mode implementation (focuses on *selection* not *execution*)
-- Real policy/safety checks (uses boolean flags as simulation)
+- Mode implementation (focuses on selection, not execution)
+- Real policy/safety checks (uses boolean flags for simulation)
 
 ---
 
 ## Questions This Demo Answers
 
 **Q: How do you prevent AI systems from being unpredictable?**  
-A: Explicit constraints, staged pipelines, and confidence-based gating.
+Explicit constraints, staged pipelines, confidence-based gating.
 
 **Q: How do you make AI decisions auditable?**  
-A: Every decision generates a cryptographically-hashed receipt with full rationale.
+Every decision generates a cryptographically-hashed receipt with full rationale.
 
 **Q: How do you handle low-confidence situations safely?**  
-A: "Clarify-once" pattern: ask one question and stop, rather than guessing.
+"Clarify-once" pattern — ask one question and stop instead of guessing.
 
-**Q: How do you prevent competing AI "voices"?**  
-A: Multi-mode arbitration with explicit constraints (max modes, required anchors, dual dominance prevention).
+**Q: How do you prevent competing AI voices?**  
+Multi-mode arbitration with explicit constraints (max modes, required anchors, dual dominance prevention).
 
 ---
 
@@ -229,4 +227,4 @@ Targeting roles in: AI Tech Ed, AI/ML Systems, Learning Experience Design
 
 ## License Note
 
-This is a portfolio demonstration. The architecture concepts are educational and freely adaptable. If you'd like to discuss implementation details or extensions, please reach out.
+This is a portfolio demonstration. The architecture concepts are educational and freely adaptable. If you'd like to discuss implementation details or extensions, please contact me.
