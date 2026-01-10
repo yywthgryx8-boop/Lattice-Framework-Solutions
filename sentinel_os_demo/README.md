@@ -1,25 +1,26 @@
 # SentinelOS Demo — Guard & Archetype Tuner
 
-This demo shows two key pieces: a simple content guard detector and a contraint-based feedback layer for tuning guard modes per archetype-defined user interfaces.
+Two pieces: a content guard detector and a feedback layer for tuning guard modes per archetype.
 
 
 ## Why This Matters
-- This pattern mirrors how adaptive systems are able to bias behavior without retraining models.
-
+Shows how you can bias AI behavior without retraining models — similar to how adaptive systems work in practice. 
 ## Features
 
 ### Part 1: Guard Detector
-- Toy heuristics for "therapy script" tone, "assistant takeover" patterns, and "ignored user wants."
-- Demo thresholds and scoring (not production).
-- Returns: ALLOW / SCRUB_AND_WARN / BLOCK_AND_RETRY with explanations.
+Detects common AI drift patterns:
+- **"Therapy script"** — overly gentle/validating tone when the context doesn't call for it
+- **"Assistant takeover"** — AI defaults to bullet points and brief explanations instead of full prose. Makes output look like a PowerPoint presentation. Loses nuance, feels low-effort, and frankly most users don't want to communicate with an AI like they're reading slides.
+- **"Ignored user wants"** — AI sticks with its default style despite explicit user direction
+
+Uses demo thresholds and scoring — not production-ready. Returns ALLOW, SCRUB_AND_WARN, or BLOCK_AND_RETRY with explanations.
 
 ### Part 2: Archetype Guard Mode Tuner (Feedback Layer)
-- Selects a guard strictness mode (e.g., STRICT, LENIENT, BALANCED) based on active drift tokens.
-- Updates learned associations (β) via reward signals.
-- Clamps β to prevent runaway weights.
-- Provides verbose warnings for misconfigured tokens.
-- “Archetype” here refers to a named interaction role or policy profile
-(e.g., STRICT vs. LENIENT), not a personality model.
+- Picks guard strictness mode (STRICT, LENIENT, BALANCED) based on active drift tokens
+- Updates learned associations (β) using reward signals
+- Clamps β to prevent runaway weights
+- Warns about misconfigured tokens
+- "Archetype" here means a named interaction role or policy profile — not a personality model
 
 ## Run
 
@@ -28,16 +29,16 @@ Basic demo (guard detector only):
 python3 "./SentinelOSdemo.py"
 ```
 
-Output shows the guard decision and demo scores.
+Shows the guard decision and demo scores.
 
 With config-driven tuner:
 ```bash
 python3 "./SentinelOSdemo.py" --config "./sentinel_config.json"
 ```
 
-Tuner output shows:
-- Chosen guard mode for the active drift tokens.
-- Updated β snapshot (guard mode ← drift token associations).
+Shows:
+- Which guard mode was chosen for active drift tokens
+- Updated β snapshot (guard mode ← drift token associations)
 
 ## Sample Config
 
@@ -63,39 +64,36 @@ Tuner output shows:
 ## Customize
 
 Edit `SentinelOSdemo.py`:
-- Adjust detector thresholds (HARD_BLOCK, SOFT_WARN) in the guard logic.
-- Change guard modes and drift tokens in the tuner defaults.
-- Update β seeds for different archetype→mode associations.
-- Tune `learning_rate`, `clamp_min`, `clamp_max` for stability.
+- Adjust detector thresholds (HARD_BLOCK, SOFT_WARN) in guard logic
+- Change guard modes and drift tokens in tuner defaults
+- Update β seeds for different archetype→mode associations
+- Tune `learning_rate`, `clamp_min`, `clamp_max` for stability
 
 ## Design Notes
 
-- The guard detector runs always; it's the first checkpoint.
-- The tuner is opt-in (only runs with `--config` or explicit mode).
-- Clamping prevents extreme updates that destabilize mode selection.
-- Verbose mode warns about missing token associations.
+- Guard detector always runs — it's the first checkpoint
+- Tuner is opt-in (only runs with `--config` or when you explicitly enable it)
+- Clamping prevents extreme updates that'd destabilize mode selection
+- Verbose mode warns about missing token associations
 
 ## No Dependencies
 
 This script uses only Python stdlib (dataclasses, enum, json, argparse).
 
 ## What's Intentionally Missing
-- Production thresholds, real invariant vocabularies, and persistence layers are intentionally omitted.”
+Production-grade thresholds, real invariant vocabularies, persistence layers.
 
 ## Who This Is For
 
-This demo is relevant to:
-- Engineers designing safety or governance layers for LLM-based systems
-- Teams exploring inference-time control without model retraining
+Relevant for:
+- Engineers designing safety/governance layers for LLM systems
+- Teams controlling AI behavior without model retraining
 - Researchers studying adaptive guardrails and policy enforcement
-- Product designers building controllable AI assistants or copilots
+- Product designers building controllable AI assistants
 
 ## Example Flow (Conceptual)
 
-1. Candidate output is generated.
-2. Guard detector scores the output for known drift patterns.
-3. SentinelOS returns a decision:
-   - ALLOW
-   - SCRUB_AND_WARN
-   - BLOCK_AND_RETRY
-4. (Optional) Feedback layer updates guard mode bias for future runs.
+1. Candidate output is generated
+2. Guard detector scores output for known drift patterns
+3. SentinelOS returns decision: ALLOW / SCRUB_AND_WARN / BLOCK_AND_RETRY
+4. (Optional) Feedback layer updates guard mode bias for future runs
