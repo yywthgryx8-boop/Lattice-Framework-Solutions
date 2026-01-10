@@ -1,19 +1,18 @@
-# Social Scientist Demo Feedback Layer
+# Social Scientist Demo — Robust Feedback Layer
 
-- This repository contains a self-contained demonstration of a qualitative feedback mechanism used to stabilize response-mode selection in AI systems.
-- This folder includes a minimal, runnable demo of a qualitative feedback layer for mode selection. It’s designed to be simple to run, with clear output.
+Self-contained demo of a qualitative feedback mechanism for stabilizing response-mode selection in AI systems.
 
 ## Files
-- `SocialScientistFeedback.py`: Standalone demo of the feedback layer.
-- `SocialScientistdemo.py`: Long-form narrative file; a compact demo block is appended at the end. The file contains non-code text at the top, so use the standalone demo for running.
+- `SocialScientistFeedback.py`: Standalone demo
+- `SocialScientistdemo.py`: Long-form narrative file with demo block appended (use standalone for running)
 
 ## What It Does
-- Maintains an association matrix β between invariants (tokens) and response modes.
-- Scores modes based on active invariants and normalized weights.
-- Selects a mode deterministically (stable tie-break).
-- Updates β via a reward signal and clamps within bounds to prevent runaway growth.
-- Warns when unknown invariants are present (helps debugging configs).
-- This demo does not modify or train any language model.
+- Maintains association matrix β between invariants (tokens) and response modes
+- Scores each response mode by summing weights for active tokens, then normalizes the results
+- Picks the highest-scoring mode — ties broken consistently, not randomly
+- Updates β via reward signal, clamped to prevent runaway growth
+- Logs a warning when it sees tokens that aren't in the β matrix — helps catch config errors
+- Does not modify or train any language model
 
 ## Quick Start
 Run the standalone demo:
@@ -23,17 +22,17 @@ python3 "./SocialScientistFeedback.py"
 ```
 
 You should see:
-- One chosen mode (e.g., `supportive`).
-- A β snapshot showing updated associations, clamped in-range.
+- One chosen mode (e.g., `supportive`)
+- β snapshot showing updated associations (clamped in-range)
 
 ## Customize
 Edit `SocialScientistFeedback.py` to change:
 - `modes = ["neutral", "supportive", "directive"]`
 - `session_tokens = ["overload", "bf_play", "engineering"]`
-- Seed β values (search for `demo.beta[...]`).
+- Seed β values (search for `demo.beta[...]`)
 
-For stronger defaults, more initial β entries can be set or adjustments can be made to: `learning_rate`, `clamp_min`, `clamp_max`.
+For stronger defaults, set more initial β entries or adjust `learning_rate`, `clamp_min`, `clamp_max`.
 
 ## Notes
-- `SocialScientistdemo.py` contains a large narrative transcript. Its appended demo block can be invoked with `--demo` once the top content is wrapped or relocated; for now, prefer the standalone file.
-- No external dependencies; runs on Python 3.x.
+- `SocialScientistdemo.py` contains a large narrative transcript with demo block appended (prefer standalone file for now)
+- No external dependencies — Python 3.x stdlib only
