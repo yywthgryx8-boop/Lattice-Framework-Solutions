@@ -78,7 +78,7 @@ class DecisionStage(str, Enum):
 
 class Tone(str, Enum):
     """Output tone profiles for different interaction contexts."""
-    THERAPIST = "Compassionate support"
+    SELF_REFLECTION = "Reflective and supportive"
     LOGICAL = "Analytical and precise"
     QUIET_WITNESS = "Minimal, observational"
     SOCRATIC = "Questioning and dialectic"
@@ -90,7 +90,7 @@ class Tone(str, Enum):
 
 class ModeName(str, Enum):
     """Behavioral modes representing different capability sets."""
-    THERAPIST = "Therapist"
+    SELF_REFLECTION = "SelfReflection"
     SENTINEL = "Sentinel"               # Stability/arbitration
     CONVERSATION = "Conversation"        # Routing only
     LAWYER = "Lawyer"
@@ -146,7 +146,7 @@ class CapTag(str, Enum):
 
 # Map modes to their capability tags
 MODE_TO_CAPS: Dict[ModeName, List[CapTag]] = {
-    ModeName.THERAPIST: [
+    ModeName.SELF_REFLECTION: [
         CapTag.EMPATHY_HIGH, CapTag.DIRECTIVE_LOW, CapTag.ABSTRACTION_LOW,
         CapTag.VALIDATION_ALLOWED, CapTag.ADVICE_RESTRICTED
     ],
@@ -552,7 +552,7 @@ class ToneSelector:
         if ctx.trauma_recall:
             return Tone.QUIET_WITNESS
         if ctx.emotional_distress or intent == "emotional_support":
-            return Tone.THERAPIST
+            return Tone.SELF_REFLECTION
         if ctx.logic_breakdown_or_recursion_loop or intent == "logic_stabilization":
             return Tone.LOGICAL
         if ctx.philosophical_inquiry or intent == "philosophical_inquiry":
@@ -572,7 +572,7 @@ class ModeArbitrator:
     Constraints:
     1. Max 2 primary modes (3rd allowed only if CONVERSATION)
     2. Must have observational anchor (ANALYST or WITNESS)
-    3. No dual emotional dominance (THERAPIST + ARTIST together requires high confidence)
+    3. No dual emotional dominance (SELF_REFLECTION + ARTIST together requires high confidence)
     
     Philosophy: Prevent competing voices. Ensure grounded outputs.
     """
@@ -602,8 +602,8 @@ class ModeArbitrator:
             modes += [ModeName.SENTINEL, ModeName.ANALYST]
             rationale.append("Logic stabilization: Sentinel + Analyst.")
         elif assessment.intent == "emotional_support":
-            modes += [ModeName.THERAPIST, ModeName.WITNESS]
-            rationale.append("Emotional support: Therapist + Witness.")
+            modes += [ModeName.SELF_REFLECTION, ModeName.WITNESS]
+            rationale.append("Emotional support: SelfReflection + Witness.")
         elif assessment.intent == "strategic_defense":
             modes += [ModeName.LAWYER, ModeName.SOCIAL_SCIENTIST, ModeName.ANALYST]
             rationale.append("Strategic defense: Lawyer + SocialScientist + Analyst.")
@@ -627,8 +627,8 @@ class ModeArbitrator:
             for m in (ModeName.LAWYER, ModeName.SOCIAL_SCIENTIST):
                 if m not in modes:
                     modes.append(m)
-        elif tone == Tone.THERAPIST and ModeName.THERAPIST not in modes:
-            modes.append(ModeName.THERAPIST)
+        elif tone == Tone.SELF_REFLECTION and ModeName.SELF_REFLECTION not in modes:
+            modes.append(ModeName.SELF_REFLECTION)
         elif tone == Tone.LOGICAL:
             for m in (ModeName.SENTINEL, ModeName.ANALYST):
                 if m not in modes:
@@ -672,7 +672,7 @@ class ModeArbitrator:
         helper = [m for m in modes if m == ModeName.CONVERSATION]
 
         # Dual emotional dominance control
-        if ModeName.THERAPIST in primary and ModeName.ARTIST in primary and assessment.confidence < 0.75:
+        if ModeName.SELF_REFLECTION in primary and ModeName.ARTIST in primary and assessment.confidence < 0.75:
             # Drop ARTIST to keep support stable
             primary = [m for m in primary if m != ModeName.ARTIST]
 
