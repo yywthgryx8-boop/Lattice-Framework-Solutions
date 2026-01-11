@@ -1,17 +1,11 @@
-This repo contains a set of small Python demos that show how one can steer LLM behavior at inference time 
-using constraints (invariants), mode routing, and simple feedback—without changing model weights. Each folder 
-focuses on a single idea. Sentinel is a guard; the feedback loop demonstrates an entrainment layer that is 
-not part of the LLM; and Social Scientist mode represents a research-oriented workflow. The code is meant to be 
-easy to read and run, and it is written to expose the underlying system and gating logic rather than to showcase 
-a specific model. This kind of control layer has high utility for professionals working on LLM tooling, safety checks, 
-evaluation, or human–AI workflows.
+Three Python demos. Each one shows a different way to control LLM behavior in real time—no retraining, no weight changes, just clear gating logic you can read and run.
 
-One-sentence demo summaries:
+**Sentinel** acts as a guardrail. It scores outputs and decides: allow, warn, or block. Fast decisions, no model updates.
 
-SentinelOS Demo: A lightweight guard that scores outputs and returns allow, warn, or block decisions without retraining.
+**Choice Engine** is where things get interesting. It's a five-step decision pipeline that weighs options, checks constraints, models confidence, and picks the best response mode on the fly. Adaptive, transparent, and built without hardcoded rules.
 
-Entrainment Feedback Loop Demo: A simple reward/punishment feedback layer that nudges mode selection over time using 
-invariant weights rather than hard rules.
+**Social Scientist** handles research workflows. It routes questions and data through qualitative lenses, then sketches out a mixed-methods study design. Think of it as a scaffold for structured inquiry.
 
-Social Scientist Demo: A runnable scaffold that routes research questions and data through qualitative lenses and 
-sketches a mixed-methods study design.
+This kind of control layer matters if you're building LLM tools, running safety checks, doing evaluation work, or designing human-AI workflows. The code exposes the system logic—not just the outputs.
+
+These three demos are samples from a larger control architecture I've designed and continue to develop called the Lattice. My design is structured as a distributed system for adaptive LLM steering, mode routing, and consensus-based decision-making. Think of it as an organized grid of distributed computation: independent nodes that operate modularly but coordinate through clear protocols. No monolithic controller, just distributed gating logic that scales and adapts. If you'd like to know more or explore how this could work in your context, feel free to reach out."
